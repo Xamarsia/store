@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: book-storage
+  datasource:
+    url: jdbc:postgresql://localhost:5432/********
+    username: '********'
+    password: '*********'
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    #      ddl-auto: update
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
