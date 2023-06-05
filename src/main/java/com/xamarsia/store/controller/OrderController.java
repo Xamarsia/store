@@ -19,14 +19,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/cart")
+//@RequestMapping("/cart")
 @AllArgsConstructor
 public class OrderController {
 
     private final OrderService service;
     private final OrderModelAssembler assembler;
 
-    @GetMapping()
+    @GetMapping("/cart")
     public CollectionModel<EntityModel<Orders>> all() {
 
         List<EntityModel<Orders>> order = service.getAllOrder().stream().map(assembler::toModel).collect(Collectors.toList());
@@ -34,39 +34,54 @@ public class OrderController {
         return CollectionModel.of(order, linkTo(methodOn(OrderController.class).all()).withSelfRel());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/cart/{id}")
     public EntityModel<Orders> one(@PathVariable Long id) {
         Orders order = service.getOrderById(id);
         return assembler.toModel(order);
     }
 
-    @PostMapping()
+    @PostMapping("/cart")
     public ResponseEntity<?> createCart() throws URISyntaxException {
         return createResponseEntity(service.createCart());
     }
 
-    @PutMapping("/{id}/order")
+    @PutMapping("cart/{id}/order")
     public ResponseEntity<?> newOrder(@PathVariable Long id) {
         return createResponseEntity(service.createOrder(id));
     }
 
-    @PutMapping("/{id}/cancel")
+    @PutMapping("/order/{id}/cancel")
     public ResponseEntity<?> cancel(@PathVariable Long id) {
         return createResponseEntity(service.cancel(id));
     }
 
+    @PutMapping("/order/{id}/completed")
+    public ResponseEntity<?> setCompleted(@PathVariable Long id) {
+        return createResponseEntity(service.setCompleted(id));
+    }
 
-    @PutMapping("/{id}")
+    @PutMapping("/order/{id}/setReadyForPickup")
+    public ResponseEntity<?> setReadyForPickup(@PathVariable Long id) {
+        return createResponseEntity(service.setReadyForPickup(id));
+    }
+
+    @PutMapping("cart/{id}")
     ResponseEntity<?> updateOrderItem(@PathVariable Long id, @RequestBody AddCartItemRequestDto temsDto) {
 
-        return createResponseEntity(service.updateOrderItem(id, temsDto));
+        return createResponseEntity(service.updateCartItem(id, temsDto));
     }
 
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable final Long id) {
+    @DeleteMapping("cart/{id}")
+    public String deleteCart(@PathVariable final Long id) {
 
         return "Cart data can't be deleted! Deleting a cart contradicts the logic of the program.";
+    }
+
+    @DeleteMapping("order/{id}")
+    public String deleteOrder(@PathVariable final Long id) {
+
+        return "Order data can't be deleted! Deleting a order contradicts the logic of the program.";
     }
 
     private ResponseEntity<?> createResponseEntity(Orders order) {

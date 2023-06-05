@@ -8,14 +8,7 @@ import com.xamarsia.store.entity.Orders;
 import com.xamarsia.store.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.mediatype.problem.Problem;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -77,7 +70,32 @@ public class OrderService {
         return repository.save(order);
     }
 
-    public Orders updateOrderItem(@NonNull final Long id, @NonNull final AddCartItemRequestDto itemsDto) {
+    public Orders setReadyForPickup(@NonNull Long id) {
+
+        Orders order = getOrderById(id);
+
+        if (order.getStatus() != Status.IN_PROGRESS) {
+            throw new RuntimeException("You can't set ready for pickup status that is in the " + order.getStatus() + " status");
+        }
+        order.setStatus(Status.READY_FOR_PICKUP);
+
+        return repository.save(order);
+    }
+
+    public Orders setCompleted(@NonNull Long id) {
+
+        Orders order = getOrderById(id);
+
+        if (order.getStatus() != Status.READY_FOR_PICKUP) {
+            throw new RuntimeException("You can't set completed status that is in the " + order.getStatus() + " status");
+        }
+        order.setStatus(Status.COMPLETED);
+
+        return repository.save(order);
+    }
+
+
+    public Orders updateCartItem(@NonNull final Long id, @NonNull final AddCartItemRequestDto itemsDto) {
         Orders order = getOrderById(id);
 
         if(order.getStatus() != Status.CART) {

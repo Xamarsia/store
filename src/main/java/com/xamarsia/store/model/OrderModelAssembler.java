@@ -40,6 +40,11 @@ public class OrderModelAssembler implements RepresentationModelAssembler<Orders,
 
         if (order.getStatus() == Status.IN_PROGRESS) {
             links.add(linkTo(methodOn(OrderController.class).cancel(order.getId())).withRel("cancel"));
+            links.add(linkTo(methodOn(OrderController.class).setReadyForPickup(order.getId())).withRel("ready_for_pickup"));
+        }
+
+        if (order.getStatus() == Status.READY_FOR_PICKUP) {
+            links.add(linkTo(methodOn(OrderController.class).setCompleted(order.getId())).withRel("completed"));
         }
 
         return EntityModel.of(order, links);
