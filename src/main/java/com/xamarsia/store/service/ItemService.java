@@ -1,19 +1,13 @@
 package com.xamarsia.store.service;
 
-import com.xamarsia.store.dto.ItemRequestDto;
+import com.xamarsia.store.dto.item.ItemRequestDto;
 import com.xamarsia.store.entity.Category;
 import com.xamarsia.store.entity.Item;
 import com.xamarsia.store.repository.ItemRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

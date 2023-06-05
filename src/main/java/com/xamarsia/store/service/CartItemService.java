@@ -7,11 +7,7 @@ import com.xamarsia.store.entity.Item;
 import com.xamarsia.store.repository.CartItemRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
@@ -73,7 +69,7 @@ public class CartItemService {
 
 
 
-    public CartItem replaceCount(@NonNull final Long id, @NonNull final CartItemUpdateRequestDto updateItemDto) {
+    public CartItem updateCount(@NonNull final Long id, @NonNull final CartItemUpdateRequestDto updateItemDto) {
         CartItem cartItem = getCartItemById(id);
 
         Item item = itemService.getItemById(cartItem.getItem().getId());

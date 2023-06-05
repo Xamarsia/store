@@ -3,11 +3,9 @@ package com.xamarsia.store.controller;
 import com.xamarsia.store.dto.cartItem.CartItemRequestDto;
 import com.xamarsia.store.dto.cartItem.CartItemUpdateRequestDto;
 import com.xamarsia.store.entity.CartItem;
-import com.xamarsia.store.entity.Item;
 import com.xamarsia.store.service.CartItemService;
 import com.xamarsia.store.model.CartItemModelAssembler;
 
-import com.xamarsia.store.service.ItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -45,14 +43,14 @@ public class CartItemController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> upload(@RequestBody CartItemRequestDto itemDto) throws URISyntaxException {
+    public ResponseEntity<?> create(@RequestBody CartItemRequestDto itemDto) throws URISyntaxException {
         return createResponseEntity(service.create(itemDto));
     }
 
 
     @PutMapping("/{id}")
-    ResponseEntity<?> replaceCount(@PathVariable Long id, @RequestBody CartItemUpdateRequestDto updateItemDto) {
-        return createResponseEntity(service.replaceCount(id, updateItemDto));
+    ResponseEntity<?> updateCount(@PathVariable Long id, @RequestBody CartItemUpdateRequestDto updateItemDto) {
+        return createResponseEntity(service.updateCount(id, updateItemDto));
     }
 
     @DeleteMapping("/{id}")

@@ -23,7 +23,7 @@ public class CategoryService {
         return repository.save(category);
     }
 
-    public Category replace(@NonNull final Long id, @NonNull final Category newCategory) throws Exception {
+    public Category update(@NonNull final Long id, @NonNull final Category newCategory) throws Exception {
         Category category = getCategoryById(id);
         category.setTitle(newCategory.getTitle());
 

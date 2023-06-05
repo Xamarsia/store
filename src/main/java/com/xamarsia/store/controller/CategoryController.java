@@ -38,15 +38,15 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> upload(@RequestBody Category category) throws URISyntaxException {
+    public ResponseEntity<?> create(@RequestBody Category category) throws URISyntaxException {
         return createResponseEntity(service.save(category));
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<?> replace(@PathVariable Long id, @RequestBody Category newCategory) {
+    ResponseEntity<?> update(@PathVariable Long id, @RequestBody Category newCategory) {
 
         try {
-            return createResponseEntity(service.replace(id, newCategory));
+            return createResponseEntity(service.update(id, newCategory));
         } catch (Exception e) {
             System.out.println("Failed to replace category" + e);
         }

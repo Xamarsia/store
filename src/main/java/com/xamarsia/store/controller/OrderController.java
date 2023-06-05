@@ -1,6 +1,5 @@
 package com.xamarsia.store.controller;
 
-import com.xamarsia.store.Status;
 import com.xamarsia.store.dto.order.AddCartItemRequestDto;
 import com.xamarsia.store.entity.Orders;
 import com.xamarsia.store.model.OrderModelAssembler;
@@ -9,10 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.mediatype.problem.Problem;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +25,6 @@ public class OrderController {
 
     private final OrderService service;
     private final OrderModelAssembler assembler;
-
 
     @GetMapping()
     public CollectionModel<EntityModel<Orders>> all() {

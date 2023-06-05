@@ -1,10 +1,8 @@
 package com.xamarsia.store.controller;
 
-import com.xamarsia.store.dto.ItemRequestDto;
-import com.xamarsia.store.entity.Category;
+import com.xamarsia.store.dto.item.ItemRequestDto;
 import com.xamarsia.store.entity.Item;
 import com.xamarsia.store.model.ItemModelAssembler;
-import com.xamarsia.store.service.CategoryService;
 import com.xamarsia.store.service.ItemService;
 
 import lombok.AllArgsConstructor;
@@ -49,7 +47,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<?> replace(@PathVariable Long id, @RequestBody ItemRequestDto itemDto) {
+    ResponseEntity<?> update(@PathVariable Long id, @RequestBody ItemRequestDto itemDto) {
         return createResponseEntity(service.update(id, itemDto));
 
     }

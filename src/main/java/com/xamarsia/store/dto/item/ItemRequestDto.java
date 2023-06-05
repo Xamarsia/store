@@ -1,4 +1,4 @@
-package com.xamarsia.store.dto;
+package com.xamarsia.store.dto.item;
 
 import lombok.Data;
 
