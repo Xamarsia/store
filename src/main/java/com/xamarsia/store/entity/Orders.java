@@ -34,7 +34,7 @@ public class Orders {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private Set<CartItem> cartItems = new HashSet<>();
 
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "user_id")
-//    private Customer user;
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

@@ -2,15 +2,16 @@ package com.xamarsia.store.service;
 
 import com.xamarsia.store.Status;
 import com.xamarsia.store.dto.order.AddCartItemRequestDto;
-import com.xamarsia.store.entity.CartItem;
-import com.xamarsia.store.entity.Item;
-import com.xamarsia.store.entity.Orders;
+import com.xamarsia.store.entity.*;
 import com.xamarsia.store.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,20 +21,51 @@ import java.util.Set;
 public class OrderService {
 
     private final OrderRepository repository;
-
     private final CartItemService itemService;
 
     public List<Orders> getAllOrder() {
         return repository.findAll();
     }
 
-    public Orders getOrderById(Long id) {
-        return repository.findById(id).orElseThrow(
-                () -> new RuntimeException("Order not found with this id: " + id));
+    public List<Orders> getAllOrdersByUser() {
+        List<Orders> orders = new ArrayList<>();
+        orders = repository.findOrdersByUser(getUser().getId());
+
+        return orders;
     }
 
-    public Orders createCart() {
+    private Boolean isUserAlreadyHasCart() {
+        return repository.findOrderStatusesByUser(getUser().getId()).contains(Status.CART);
+    }
+
+    public Orders getOrderById(Long id) {
+        Orders order = repository.findById(id).orElseThrow(
+                () -> new RuntimeException("Order not found with this id: " + id));
+
+        User user = getUser();
+        if(user.getId() != order.getUser().getId() && user.getRole() != Role.ADMIN){
+            throw new RuntimeException("You can't change not your order");
+        }
+
+        return order;
+    }
+
+    private User getUser(){
+        User user = null;
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             user = (User)authentication.getPrincipal();
+
+        } catch (Exception e) {
+            throw  new RuntimeException("Failed to find user", e);
+        }
+        return user;
+    }
+
+    public Orders createCart(User user) {
+
         Orders newOrder = new Orders();
+        newOrder.setUser(user);
         return repository.save(newOrder);
     }
 
@@ -51,12 +83,13 @@ public class OrderService {
         order.setCreatedDate(localDateTime);
 
         order.setPickUpData(localDateTime.plusDays(2).toLocalDate());
-        createCart();
+        createCartForAuthorizedUser();
 
         return repository.save(order);
     }
 
 
+    //TODO User/Administrator permission
     public Orders cancel(@NonNull Long id) {
 
         Orders order = getOrderById(id);
@@ -65,11 +98,13 @@ public class OrderService {
             throw new RuntimeException("You can't cancel an order that is in the " + order.getStatus() + " status");
         }
         order.setStatus(Status.CANCELLED);
-        createCart();
+        createCartForAuthorizedUser();
 
         return repository.save(order);
     }
 
+
+    //TODO Administrator permission
     public Orders setReadyForPickup(@NonNull Long id) {
 
         Orders order = getOrderById(id);
@@ -82,6 +117,7 @@ public class OrderService {
         return repository.save(order);
     }
 
+    //TODO Administrator permission
     public Orders setCompleted(@NonNull Long id) {
 
         Orders order = getOrderById(id);
@@ -95,6 +131,7 @@ public class OrderService {
     }
 
 
+    //TODO User permission
     public Orders updateCartItem(@NonNull final Long id, @NonNull final AddCartItemRequestDto itemsDto) {
         Orders order = getOrderById(id);
 
@@ -126,4 +163,7 @@ public class OrderService {
         return order;
     }
 
+    private Orders createCartForAuthorizedUser() {
+       return createCart(getUser());
+    }
 }

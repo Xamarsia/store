@@ -29,7 +29,7 @@ public class OrderController {
     @GetMapping("/cart")
     public CollectionModel<EntityModel<Orders>> all() {
 
-        List<EntityModel<Orders>> order = service.getAllOrder().stream().map(assembler::toModel).collect(Collectors.toList());
+        List<EntityModel<Orders>> order = service.getAllOrdersByUser().stream().map(assembler::toModel).collect(Collectors.toList());
 
         return CollectionModel.of(order, linkTo(methodOn(OrderController.class).all()).withSelfRel());
     }
@@ -40,10 +40,10 @@ public class OrderController {
         return assembler.toModel(order);
     }
 
-    @PostMapping("/cart")
-    public ResponseEntity<?> createCart() throws URISyntaxException {
-        return createResponseEntity(service.createCart());
-    }
+//    @PostMapping("/cart")
+//    public ResponseEntity<?> createCart() throws URISyntaxException {
+//        return createResponseEntity(service.createSingleCart());
+//    }
 
     @PutMapping("cart/{id}/order")
     public ResponseEntity<?> newOrder(@PathVariable Long id) {
